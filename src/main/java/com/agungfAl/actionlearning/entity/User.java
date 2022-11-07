@@ -94,5 +94,8 @@ public class User {
     public void setLast_login(Date last_login) {
         this.last_login = last_login;
     }
-    
+    public String getPassword() {
+        return password;
+    }
+
 }

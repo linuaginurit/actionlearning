@@ -10,12 +10,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.agungfAl.actionlearning.entity.User;
 import com.agungfAl.actionlearning.repository.UserRepository;
+import com.agungfAl.actionlearning.service.UserService;
 
 @RestController
 @RequestMapping(path = "/users")
 public class UserController {
   @Autowired
   UserRepository repo;
+
+  @Autowired
+  UserService service;
+
 
   @GetMapping("")
     public List<User> getAllUser(){
@@ -24,7 +29,7 @@ public class UserController {
 
   @PostMapping("")
   public User addUser(User user){
-        return repo.save(user);
+    return service.simpanUser(user);
     }
 
   @GetMapping("/{id}")
