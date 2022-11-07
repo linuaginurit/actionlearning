@@ -4,17 +4,21 @@ import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 
 
 @Entity
+@NamedQuery(name = "Employee.findAdmin", query = "SELECT e FROM Employee e WHERE e.role = 'ADMIN'")
 public class Employee {
   
   private @Id @GeneratedValue Long id;
@@ -25,13 +29,16 @@ public class Employee {
   private String role;
   private boolean isActive;
 
-  @ManyToOne
+
+  @Transient 
+  Long atasan_id;
+  @ManyToOne(fetch = FetchType.LAZY,optional = false)
   @JoinColumn (name = "atasan_id")
   private Employee atasan;
 
-//   @OneToMany
-//   @JoinColumn(mappedBy="atasan")
-//   private List<Employee> staff;
+  @OneToMany(mappedBy = "atasan", fetch = FetchType.LAZY)
+//   @JoinColumn(name = "atasan_id")
+  private List<Employee> staff;
 
   public Employee() {
   }
@@ -82,4 +89,10 @@ public class Employee {
   public void setActive(boolean isActive) {
       this.isActive = isActive;
   }
+public Employee getAtasan() {
+    return atasan;
+}
+// public List<Employee> getStaff() {
+//     return staff;
+// }
 }
