@@ -9,6 +9,10 @@ import org.springframework.stereotype.Component;
 
 import com.agungfAl.actionlearning.entity.User;
 import com.agungfAl.actionlearning.repository.UserRepository;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Component
 public class UserService implements UserDetailsService {
   @Autowired
@@ -23,6 +27,7 @@ public class UserService implements UserDetailsService {
     }
 
     public User simpanUser(User user){
+      log.info("creating user",user);
       //modifikasi data password
       user.setPassword(encoder.encode(user.getPassword()));
       return userRepository.save(user);

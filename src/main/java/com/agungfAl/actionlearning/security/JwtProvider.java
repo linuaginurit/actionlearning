@@ -3,27 +3,35 @@ import java.util.Base64;
 import java.util.Collection;
 import java.util.Date;
 
+import javax.annotation.PostConstruct;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
+@Component
 public class JwtProvider {
     private SecretKey secretKey;
-    private static final String AUTH_KEY="reoles";
-    
+    private String rahasia = "rahasia";
+    private static final String AUTH_KEY="roles";
+
     // inisialisasi
+    @PostConstruct
     public void init(){
         //secret key
         // secret = Base64.getEncoder().encodeToString("secret".getBytes());
-       
+        String secret = Base64.getEncoder().encodeToString(rahasia.getBytes());
+        this.secretKey = new SecretKeySpec(secret.getBytes(), "HmacSHA256");
+
     }
     // create token
     public String createToken(Authentication authentication){

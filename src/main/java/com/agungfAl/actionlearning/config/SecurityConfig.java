@@ -5,10 +5,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.agungfAl.actionlearning.security.JwtAutheticationFilter;
+import com.agungfAl.actionlearning.security.JwtProvider;
 import com.agungfAl.actionlearning.service.UserService;
 
 @Configuration
@@ -19,15 +23,18 @@ public class SecurityConfig {
   }
 
   @Bean
-  SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
+  SecurityFilterChain filterChain(HttpSecurity http, JwtProvider provider) throws Exception{
     // http.httpBasic();
     http.csrf().disable();
+    http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     http.authorizeRequests(c->c
             .antMatchers(HttpMethod.POST,"/users").permitAll()
-            .antMatchers(HttpMethod.GET,"/users").permitAll()
+            .antMatchers(HttpMethod.POST,"/login").permitAll()
+            // .antMatchers(HttpMethod.GET,"/users").permitAll()
             // .anyRequest().permitAll()
             .anyRequest().authenticated()
             );
+    http.addFilterBefore(new JwtAutheticationFilter(provider), UsernamePasswordAuthenticationFilter.class);
     return http.build();
 }
 
@@ -43,7 +50,7 @@ public class SecurityConfig {
 // }
 
 @Bean
-AuthenticationManager customAuthenticationManager(UserService service,PasswordEncoder encoder){
+AuthenticationManager customAuthenticationManager(UserService service, PasswordEncoder encoder){
     return authentication->{
         String username = authentication.getName();
         String password = (String) authentication.getCredentials();
