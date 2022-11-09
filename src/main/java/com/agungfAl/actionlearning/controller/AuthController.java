@@ -26,3 +26,4 @@ public class AuthController {
         return jwtProvider.createToken(auth);
     }
 }
+    

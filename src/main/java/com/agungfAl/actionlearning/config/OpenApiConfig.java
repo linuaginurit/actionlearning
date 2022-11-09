@@ -16,7 +16,7 @@ public class OpenApiConfig {
             components(new Components())
             .info(new Info()
                 .title("Penyerapan Dana Desa API Documentation")
-                .description("Dokumentasi Demo API kelas Java")
+                .description("Penyerapan Dana Desa Tahun 2022")
                 .version("1.0.0")
             );
     }
